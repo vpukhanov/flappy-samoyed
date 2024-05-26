@@ -7,7 +7,7 @@ var
   fgpos = 0,
 
   size = 2,
-  gap = 80 * size,
+  gap = 90 * size,
 
   frames = 0,
   score = 0,
@@ -35,12 +35,13 @@ function onPress(e) {
     case states.Score:
       var mx = e.offsetX,
         my = e.offsetY;
-      if (mx === null || my === null) {
+      if (mx == null || my == null) {
         mx = e.touches[0].clientX;
         my = e.touches[0].clientY;
       }
-      // for mozilla:
-      // var mx = e.layerX, my = e.layerY;
+
+      console.log(mx, my)
+      console.log(okButton)
 
       if (okButton.x < mx && mx < okButton.x + okButton.width &&
         okButton.y < my && my < okButton.y + okButton.height
@@ -68,6 +69,9 @@ function main() {
   }
 
   document.addEventListener(e, onPress);
+  document.addEventListener('click', () => {
+    document.querySelector('#background-music').play();
+  })
 
   canvas.width = width;
   canvas.height = height;

@@ -7,8 +7,8 @@ var bird = {
   animation: [0, 1, 2, 3],
   rotation: 0,
   radius: 12 * size,
-  gravity: 0.25 * size,
-  _jump: 4.6 * size,
+  gravity: 0.12 * size,
+  _jump: 3.0 * size,
 
   jump: function() {
     this.velocity = -this._jump;
