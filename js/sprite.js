@@ -1,4 +1,3 @@
-
 const SPRITE_NAMES = {
   BIRD: "bird",
   BACKGROUND: "bg",
