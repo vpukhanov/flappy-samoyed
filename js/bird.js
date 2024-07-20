@@ -1,63 +1,66 @@
-var bird = {
+import { game } from "./game.js";
+import { size, states } from "./gameConstants.js";
+import { SPRITE_NAMES, sprites } from "./sprite.js";
 
-  x: 60,
-  y: 0,
-  frame: 0,
-  velocity: 0,
-  animation: [0, 1, 2, 3],
-  rotation: 0,
-  radius: 12 * size,
-  gravity: 0.12 * size,
-  _jump: 3.0 * size,
+class Bird {
+  constructor() {
+    this.x = 60;
+    this.y = 0;
+    this.frame = 0;
+    this.velocity = 0;
+    this.animation = [0, 1, 2, 3];
+    this.rotation = 0;
+    this.radius = 12 * size;
+    this.gravity = 0.12 * size;
+    this._jump = 3.0 * size;
+  }
 
-  jump: function() {
+  jump() {
     this.velocity = -this._jump;
-  },
+  }
 
-  update: function() {
-    var n = currentState === states.Splash ? 10 : 5;
+  update(frames) {
+    const n = game.currentState === states.Splash ? 10 : 5;
     this.frame += frames % n === 0 ? 1 : 0;
     this.frame %= this.animation.length;
 
-    if (currentState === states.Splash) {
-      this.y = height - 280 + 5*Math.cos(frames/10);
+    if (game.currentState === states.Splash) {
+      this.y = game.height - 280 + 5 * Math.cos(frames / 10);
       this.rotation = 0;
     } else {
       this.velocity += this.gravity;
       this.y += this.velocity;
 
-      if (this.y >= height - s_fg.height-this.radius-2) {
-        this.y = height - s_fg.height-this.radius-2;
-        if (currentState === states.Game) {
-          currentState = states.Score;
+      const foregroundHeight = sprites.get(SPRITE_NAMES.FOREGROUND).height;
+      if (this.y >= game.height - foregroundHeight - this.radius - 2) {
+        this.y = game.height - foregroundHeight - this.radius - 2;
+        if (game.currentState === states.Game) {
+          return states.Score;
         }
         this.velocity = this._jump;
-
       }
 
       if (this.velocity >= this._jump) {
         this.frame = 1;
-        this.rotation = Math.min(Math.PI/2, this.rotation + 0.3);
+        this.rotation = Math.min(Math.PI / 2, this.rotation + 0.3);
       } else {
         this.rotation = -0.3;
       }
     }
-  },
 
-  draw: function(ctx) {
+    return game.currentState;
+  }
+
+  draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    // ctx.rotate(this.rotation);
 
-    var n = this.animation[this.frame];
-    s_bird[n].draw(ctx, -s_bird[n].width/2, -s_bird[n].height/2);
-
-  //view hitbox
-    // ctx.fillStyle = "#f00";
-    // ctx.beginPath();
-    // ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
-    // ctx.fill();
+    const n = this.animation[this.frame];
+    const birdSprite = sprites.get(SPRITE_NAMES.BIRD)[n];
+    birdSprite.draw(ctx, -birdSprite.width / 2, -birdSprite.height / 2);
 
     ctx.restore();
   }
-};
+}
+
+export const bird = new Bird();

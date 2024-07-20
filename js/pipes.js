@@ -1,42 +1,58 @@
-var pipes = {
+import { bird } from "./bird.js";
+import { game } from "./game.js";
+import { size } from "./gameConstants.js";
+import { SPRITE_NAMES, sprites } from "./sprite.js";
 
-  _pipes: [],
-
-  reset: function() {
+class Pipes {
+  constructor() {
     this._pipes = [];
-  },
+    this.gap = 90 * size;
+  }
 
-  update: function() {
+  reset() {
+    this._pipes = [];
+  }
+
+  update(frames) {
     if (frames % 100 === 0) {
-      var _y = height - (s_pipeSouth.height + s_fg.height) - (120 * size - 20 * size + 200 * Math.random() / (size / 1.3));
+      const pipeSprite = sprites.get(SPRITE_NAMES.PIPE_SOUTH);
+      const foregroundHeight = sprites.get(SPRITE_NAMES.FOREGROUND).height;
+      const _y =
+        game.height -
+        (pipeSprite.height + foregroundHeight) -
+        (120 * size - 20 * size + (200 * Math.random()) / (size / 1.3));
       this._pipes.push({
         x: 500,
         y: _y,
-        width: s_pipeSouth.width,
-        height: s_pipeSouth.height
+        width: pipeSprite.width,
+        height: pipeSprite.height,
       });
     }
-    for (var i = 0, len = this._pipes.length; i < len; i++) {
-      var p = this._pipes[i];
+
+    let score = 0;
+    for (let i = 0; i < this._pipes.length; i++) {
+      const p = this._pipes[i];
 
       if (i === 0) {
+        score += p.x === bird.x ? 1 : 0;
 
-        score += p.x == bird.x ? 1 : 0;
+        const cx = Math.min(Math.max(bird.x, p.x), p.x + p.width);
+        const cy1 = Math.min(Math.max(bird.y, p.y), p.y + p.height);
+        const cy2 = Math.min(
+          Math.max(bird.y, p.y + p.height + this.gap),
+          p.y + 2 * p.height + this.gap,
+        );
 
-        var cx = Math.min(Math.max(bird.x, p.x), p.x + p.width);
-        var cy1 = Math.min(Math.max(bird.y, p.y), p.y + p.height);
-        var cy2 = Math.min(Math.max(bird.y, p.y + p.height + gap), p.y + 2 * p.height + gap);
+        const dx = bird.x - cx;
+        const dy1 = bird.y - cy1;
+        const dy2 = bird.y - cy2;
 
-        var dx = bird.x - cx;
-        var dy1 = bird.y - cy1;
-        var dy2 = bird.y - cy2;
-
-        var d1 = dx * dx + dy1 * dy1;
-        var d2 = dx * dx + dy2 * dy2;
-        var r = bird.radius * bird.radius;
+        const d1 = dx * dx + dy1 * dy1;
+        const d2 = dx * dx + dy2 * dy2;
+        const r = bird.radius * bird.radius;
 
         if (r > d1 || r > d2) {
-          currentState = states.Score;
+          return { gameOver: true, score };
         }
       }
 
@@ -44,16 +60,21 @@ var pipes = {
       if (p.x < -50) {
         this._pipes.splice(i, 1);
         i--;
-        len--;
       }
     }
-  },
 
-  draw: function(ctx) {
-    for (var i = 0, len = this._pipes.length; i < len; i++) {
-      var p = this._pipes[i];
-      s_pipeSouth.draw(ctx, p.x, p.y);
-      s_pipeNorth.draw(ctx, p.x, p.y + gap + p.height);
+    return { gameOver: false, score };
+  }
+
+  draw(ctx) {
+    const pipeNorth = sprites.get(SPRITE_NAMES.PIPE_NORTH);
+    const pipeSouth = sprites.get(SPRITE_NAMES.PIPE_SOUTH);
+
+    for (const p of this._pipes) {
+      pipeSouth.draw(ctx, p.x, p.y);
+      pipeNorth.draw(ctx, p.x, p.y + this.gap + p.height);
     }
   }
-};
+}
+
+export const pipes = new Pipes();
