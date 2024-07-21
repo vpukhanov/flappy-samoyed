@@ -1,0 +1,32 @@
+service: flappy-samoyed
+
+image: pukhanov/flappy-samoyed
+
+servers:
+  web:
+    hosts:
+      - <%= ENV['KAMAL_SERVER_IP'] %>
+    options:
+      "add-host": host.docker.internal:host-gateway
+    labels:
+      traefik.http.routers.flappy-samoyed.rule: Host(`flappy.pukhanov.ru`)
+      traefik.http.routers.flappy-samoyed_secure.rule: Host(`flappy.pukhanov.ru`)
+      traefik.http.routers.flappy-samoyed_secure.entrypoints: websecure
+      traefik.http.routers.flappy-samoyed_secure.tls.certresolver: letsencrypt
+
+registry:
+  server: cr.selcloud.ru
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+ssh:
+  user: <%= ENV['KAMAL_SERVER_USER'] %>
+
+env:
+  secret:
+    - KAMAL_SERVER_IP
+    - KAMAL_SERVER_USER
+    - KAMAL_REGISTRY_USERNAME
+    - KAMAL_REGISTRY_PASSWORD
