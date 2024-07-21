@@ -2,20 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-    />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#70C5CF" />
-    <meta name="msapplication-navbutton-color" content="#70C5CF" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="#70C5CF" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flappy Samoyed</title>
+    <meta
+      name="description"
+      content="Play Flappy Samoyed, a fun twist on the classic Flappy Bird game!"
+    />
+    <meta name="theme-color" content="#70C5CF" />
     <link rel="stylesheet" href="/res/main.css" />
+    <link rel="icon" href="/res/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/res/samoyed2.png" type="image/png" />
   </head>
   <body>
-    <audio id="background-music" src="/res/audio.mp3" loop></audio>
+    <main id="game-container"></main>
+    <audio
+      id="background-music"
+      src="/res/audio.mp3"
+      loop
+      preload="auto"
+    ></audio>
     <script type="module" src="/js/start.js"></script>
   </body>
 </html>

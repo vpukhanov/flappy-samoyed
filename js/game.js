@@ -39,7 +39,7 @@ class Game {
     this.canvas.height = this.height;
     this.ctx = this.canvas.getContext("2d");
 
-    document.body.appendChild(this.canvas);
+    document.querySelector("#game-container").appendChild(this.canvas);
 
     const img = await this.loadImage("/res/sheet.png");
     await initSprites(img);
